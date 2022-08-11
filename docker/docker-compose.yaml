@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  database:
+    image: "postgres:14-alpine"
+    ports:
+      - "9432:5432"
+    volumes:
+      - "pgdatabase:/var/lib/postgresql/data"
+      - "./migrations:/docker-entrypoint-initdb.d:ro"
+    environment:
+      POSTGRES_USER: bry
+      POSTGRES_PASSWORD: supersecure
+      POSTGRES_DB: bry
+
+volumes:
+  pgdatabase:
