@@ -1,0 +1,26 @@
+
+name: Node.js CI
+
+on:
+  push:
+    branches:
+      - "master"
+  pull-requests:
+    branches:
+      - "master"
+      - "development"
+
+
+jobs:
+  build:
+    steps:
+    - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+      with:
+        version: 7.9.0
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        cache: 'pnpm'
+    - run: pnpm install
+    - run: pnpm test
