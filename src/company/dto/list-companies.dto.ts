@@ -1,6 +1,5 @@
 // Import dependencies
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
 import {
     IsInt,
     IsOptional,
@@ -10,29 +9,27 @@ import {
 } from "class-validator";
 
 // Export DTO
-export class ListEmployeesDto {
+export class ListCompaniesDto {
     // Pagination parameters
     @ApiProperty({
         description: "Pagination - Selected page",
         example: 3,
         minimum: 0,
-        required: false,
     })
-    @ValidateIf(({ pageSize }) => typeof pageSize !== "undefined")
+    @ValidateIf(({ pageSize }) => typeof pageSize === "number")
     @Min(0)
     @IsInt()
-    @Type(() => Number)
+    @IsOptional()
     page?: number;
 
     @ApiProperty({
         description: "Pagination - Items per page",
         example: 20,
         minimum: 1,
-        required: false,
     })
-    @ValidateIf(({ page }) => typeof page !== "undefined")
+    @ValidateIf(({ page }) => typeof page === "number")
     @IsPositive()
     @IsInt()
-    @Type(() => Number)
+    @IsOptional()
     pageSize?: number;
 }

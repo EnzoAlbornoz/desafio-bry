@@ -1,7 +1,7 @@
 // Import dependencies
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Company } from "src/company/entities/company.entity";
+import { Company } from "../company/entities/company.entity";
 import { DeepPartial, type Repository } from "typeorm";
 import { Employee } from "./entities/employee.entity";
 // Define Types
@@ -17,6 +17,10 @@ interface PaginationOptions {
     page: number;
     pageSize: number;
 }
+type UpdateEmployeeParams = Pick<
+    Partial<CreateEmployeeParams>,
+    "name" | "email" | "address"
+>;
 // Define service
 @Injectable()
 export class EmployeeService {
@@ -73,5 +77,54 @@ export class EmployeeService {
         employee = await this.employeesRepository.save(employee);
         // Return created entity
         return employee;
+    }
+
+    async updateEmployee(
+        employee: Employee,
+        { name, email, address }: UpdateEmployeeParams,
+    ): Promise<Employee> {
+        // Update Employee data
+        employee.name = name ?? employee.name;
+        employee.email = email ?? employee.email;
+        employee.address = address ?? employee.address;
+        // Persist entity
+        return this.employeesRepository.save(employee);
+    }
+
+    async addCompanyToEmployee(
+        employee: Employee,
+        companiesIds: Array<string>,
+    ) {
+        // Update Employee data
+        employee.companies.push(
+            ...companiesIds.map((companyId) => {
+                const company = new Company();
+                company.id = companyId;
+                return company;
+            }),
+        );
+        // Persist entity
+        return this.employeesRepository.save(employee);
+    }
+
+    async removeCompanyFromEmployee(
+        employee: Employee,
+        companiesIds: Array<string>,
+    ) {
+        // Update Employee data
+        employee.companies = employee.companies.filter(
+            (company) => !companiesIds.includes(company.id),
+        );
+        // Persist Entity
+        return this.employeesRepository.save(employee);
+    }
+
+    async removeEmployee(employee: Employee): Promise<Employee> {
+        // Soft remove the Employee
+        const [removedEmployee] = await this.employeesRepository.softRemove([
+            employee,
+        ]);
+        // Return removed Employee
+        return removedEmployee;
     }
 }

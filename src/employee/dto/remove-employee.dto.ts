@@ -2,10 +2,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsUUID } from "class-validator";
 // Define DTO
-export class GetOneEmployeeDto {
+export class RemoveEmployeeParamsDto {
     @ApiProperty({
         description: "Employee's identifier",
-        example: "54a3a4b6-82ad-4aae-ae8d-8ecc22aecdc5",
+        example: "6911e262-467b-4044-b385-d9247df9cae7",
     })
     @IsUUID("4")
     @IsNotEmpty()

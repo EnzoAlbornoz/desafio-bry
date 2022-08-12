@@ -9,12 +9,15 @@ import databaseConfig from "./database.config";
     imports: [
         ConfigModule.forFeature(databaseConfig),
         TypeOrmModule.forRootAsync({
-            useFactory: (configService: ConfigService) => ({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: async (configService: ConfigService) => ({
                 type: "postgres",
                 host: configService.get("database.host"),
                 port: configService.get("database.port"),
                 username: configService.get("database.username"),
                 password: configService.get("database.password"),
+                database: configService.get("database.name"),
                 autoLoadEntities: true,
                 useUTC: true,
                 namingStrategy: new SnakeNamingStrategy(),

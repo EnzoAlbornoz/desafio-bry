@@ -1,5 +1,5 @@
 // Import dependencies
-import { Employee } from "src/employee/entities/employee.entity";
+import { Employee } from "../../employee/entities/employee.entity";
 import {
     Entity,
     Column,
@@ -8,9 +8,11 @@ import {
     UpdateDateColumn,
     DeleteDateColumn,
     ManyToMany,
+    Index,
 } from "typeorm";
 // Define entity
 @Entity("companies")
+@Index(["nationalRegistryOfLegalEntity", "deletedAt"], { unique: true })
 export class Company {
     @PrimaryGeneratedColumn("uuid")
     id: string;
@@ -25,9 +27,7 @@ export class Company {
     @Column("text")
     address: string;
 
-    @ManyToMany(() => Employee, (category) => category.companies, {
-        cascade: true,
-    })
+    @ManyToMany(() => Employee, (category) => category.companies)
     employees: Array<Employee>;
 
     @CreateDateColumn()

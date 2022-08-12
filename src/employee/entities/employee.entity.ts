@@ -1,5 +1,5 @@
 // Import dependencies
-import { Company } from "src/company/entities/company.entity";
+import { Company } from "../../company/entities/company.entity";
 import {
     Entity,
     Column,
@@ -9,9 +9,11 @@ import {
     DeleteDateColumn,
     JoinTable,
     ManyToMany,
+    Index,
 } from "typeorm";
 // Define entity
 @Entity("employees")
+@Index(["socialSecurityNumber", "deletedAt"], { unique: true })
 export class Employee {
     @PrimaryGeneratedColumn("uuid")
     id: string;
@@ -19,7 +21,7 @@ export class Employee {
     @Column("text")
     name: string;
 
-    @Column("varchar", { length: 11 })
+    @Column("varchar", { length: 11, unique: true })
     socialSecurityNumber: string;
 
     @Column("varchar", { length: 254 })
@@ -32,7 +34,14 @@ export class Employee {
     @ManyToMany(() => Company, (company) => company.employees, {
         cascade: true,
     })
-    @JoinTable({ name: "companies_employees" })
+    @JoinTable({
+        name: "companies_employees",
+        joinColumn: {
+            name: "employee_id",
+            referencedColumnName: "id",
+        },
+        inverseJoinColumn: { name: "company_id", referencedColumnName: "id" },
+    })
     companies: Array<Company>;
 
     @CreateDateColumn()
