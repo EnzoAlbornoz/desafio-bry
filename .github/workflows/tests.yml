@@ -13,6 +13,8 @@ on:
 
 jobs:
   build:
+    runs-on: ubuntu-22.04
+
     steps:
     - uses: actions/checkout@v3
     - uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
