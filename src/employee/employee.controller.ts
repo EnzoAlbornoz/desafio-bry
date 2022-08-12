@@ -11,6 +11,7 @@ import {
     Query,
     UnprocessableEntityException,
 } from "@nestjs/common";
+import { ApiResponse } from "@nestjs/swagger";
 import {
     AddEmployeeCompaniesBodyDto,
     AddEmployeeCompaniesParamsDto,
@@ -25,12 +26,13 @@ import {
     UpdateEmployeeParamsDto,
 } from "./dto/update-employee.dto";
 import { EmployeeService } from "./employee.service";
-import { type Employee } from "./entities/employee.entity";
+import { Employee } from "./entities/employee.entity";
 // Define controller
 @Controller("/employees")
 export class EmployeeController {
     constructor(private employeeService: EmployeeService) {}
 
+    @ApiResponse({ type: [Employee] })
     @Get("/")
     async list(
         @Query() { page, pageSize }: ListEmployeesDto,
@@ -48,6 +50,7 @@ export class EmployeeController {
         return employees;
     }
 
+    @ApiResponse({ type: Employee })
     @Get("/:employeeId")
     async getOne(
         @Param() { employeeId }: GetOneEmployeeDto,
@@ -64,6 +67,7 @@ export class EmployeeController {
         return maybeEmployee;
     }
 
+    @ApiResponse({ type: Employee })
     @Post("/")
     async create(
         @Body()
@@ -87,6 +91,7 @@ export class EmployeeController {
         return employee;
     }
 
+    @ApiResponse({ type: Employee })
     @Patch("/:employeeId")
     async update(
         @Param() { employeeId }: UpdateEmployeeParamsDto,
@@ -109,6 +114,7 @@ export class EmployeeController {
         return employee;
     }
 
+    @ApiResponse({ type: Employee })
     @Post("/:employeeId/companies")
     async addCompanies(
         @Param() { employeeId }: AddEmployeeCompaniesParamsDto,
@@ -135,6 +141,7 @@ export class EmployeeController {
         return employee;
     }
 
+    @ApiResponse({ type: Employee })
     @Delete("/:employeeId/companies/:companyId")
     async removeCompany(
         @Param() { employeeId, companyId }: RemoveEmployeeCompaniesParamsDto,
@@ -164,6 +171,7 @@ export class EmployeeController {
         return employee;
     }
 
+    @ApiResponse({ type: Employee })
     @Delete("/:employeeId")
     async removeEmployee(@Param() { employeeId }: RemoveEmployeeParamsDto) {
         // Fetch Employee

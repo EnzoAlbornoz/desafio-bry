@@ -11,7 +11,7 @@ import {
     Query,
     UnprocessableEntityException,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CompanyService } from "./company.service";
 import {
     AddCompanyEmployeesBodyDto,
@@ -33,6 +33,7 @@ import { Company } from "./entities/company.entity";
 export class CompanyController {
     constructor(private companyService: CompanyService) {}
 
+    @ApiResponse({ type: [Company] })
     @Get("/")
     async list(
         @Query() { page, pageSize }: ListCompaniesDto,
@@ -50,6 +51,7 @@ export class CompanyController {
         return companies;
     }
 
+    @ApiResponse({ type: Company })
     @Get("/:companyId")
     async getOne(@Param() { companyId }: GetOneCompanyDto): Promise<Company> {
         // Try get Company
@@ -62,6 +64,7 @@ export class CompanyController {
         return maybeCompany;
     }
 
+    @ApiResponse({ type: Company })
     @Post("/")
     async create(
         @Body()
@@ -83,6 +86,7 @@ export class CompanyController {
         return company;
     }
 
+    @ApiResponse({ type: Company })
     @Patch("/:companyId")
     async update(
         @Param() { companyId }: UpdateCompanyParamsDto,
@@ -103,6 +107,7 @@ export class CompanyController {
         return company;
     }
 
+    @ApiResponse({ type: Company })
     @Post("/:companyId/employees")
     async addEmployees(
         @Param() { companyId }: AddCompanyEmployeesParamsDto,
@@ -127,6 +132,7 @@ export class CompanyController {
         return company;
     }
 
+    @ApiResponse({ type: Company })
     @Delete("/:companyId/employees/:employeeId")
     async removeEmployee(
         @Param() { companyId, employeeId }: RemoveCompanyEmployeeParamsDto,
@@ -152,6 +158,7 @@ export class CompanyController {
         return company;
     }
 
+    @ApiResponse({ type: Company })
     @Delete("/:companyId")
     async removeCompany(@Param() { companyId }: RemoveCompanyParamsDto) {
         // Fetch Company
